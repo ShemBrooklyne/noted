@@ -62,6 +62,8 @@ class _LoginViewState extends State<LoginView> {
                     .signInWithEmailAndPassword(
                         email: email, password: password);
                 logger.i(userCredential);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/notes/', (route) => false);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
                   logger.e('Invalid user credentials');
