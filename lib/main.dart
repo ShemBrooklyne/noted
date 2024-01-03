@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:noted/firebase_options.dart';
 import 'package:noted/views/login_view.dart';
 import 'package:noted/views/register_view.dart';
+import 'package:noted/views/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +29,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
     return FutureBuilder(
       future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
@@ -33,17 +37,40 @@ class MyHomePage extends StatelessWidget {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            // final user = FirebaseAuth.instance.currentUser;
-            // if (user?.emailVerified ?? false) {
-            //   return const Text('Done');
-            // } else {
-            //   return const VerifyEmailView();
-            // }
-            return const LoginView();
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                logger.i('Email is verified');
+                return const NotedView();
+              } else {
+                return const VerifyEmailView();
+              }
+            } else {
+              return const LoginView();
+            }
           default:
             return const CircularProgressIndicator();
         }
       },
+    );
+  }
+}
+
+class NotedView extends StatefulWidget {
+  const NotedView({super.key});
+
+  @override
+  State<NotedView> createState() => _NotedViewState();
+}
+
+class _NotedViewState extends State<NotedView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Noted'),
+      ),
+      body: const Text('Hello World'),
     );
   }
 }
