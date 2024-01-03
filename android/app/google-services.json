@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1026956907987",
+    "project_id": "flutter-noted-app",
+    "storage_bucket": "flutter-noted-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026956907987:android:299db8848087efd1cc8b26",
+        "android_client_info": {
+          "package_name": "geek.wys.noted"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbNRFV4mf3Y9VSCto9hNdOdVQzinTorXo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
