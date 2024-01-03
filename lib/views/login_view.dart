@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger();
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -58,10 +61,11 @@ class _LoginViewState extends State<LoginView> {
                 final userCredential = await FirebaseAuth.instance
                     .signInWithEmailAndPassword(
                         email: email, password: password);
-                print(userCredential);
+                logger.i(userCredential);
               } on FirebaseAuthException catch (e) {
-                if (e.code == 'INVALID_LOGIN_CREDENTIALS')
-                  print('Invalid user credentials');
+                if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+                  logger.e('Invalid user credentials');
+                }
               }
             },
             child: const Text('Sign in'),
