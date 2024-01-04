@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:noted/constants/routes.dart';
+import 'package:noted/utilities/show_error_dialog.dart';
 
 var logger = Logger();
 
@@ -68,7 +69,21 @@ class _LoginViewState extends State<LoginView> {
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
                   logger.e('Invalid user credentials');
+                  await showErrorDialog(
+                    context,
+                    'Invalid user credentials',
+                  );
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Error: ${e.code.toLowerCase()}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: const Text('Sign in'),
