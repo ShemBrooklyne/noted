@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:noted/constants/routes.dart';
+import 'package:noted/services/auth/auth_exceptions.dart';
+import 'package:noted/services/auth/auth_service.dart';
 import 'package:noted/utilities/show_error_dialog.dart';
 
 var logger = Logger();
@@ -61,12 +62,12 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
                     (route) => false,
@@ -77,23 +78,15 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-                  logger.e('Invalid user credentials');
-                  await showErrorDialog(
-                    context,
-                    'Invalid user credentials',
-                  );
-                } else {
-                  await showErrorDialog(
-                    context,
-                    'Error: ${e.code.toLowerCase()}',
-                  );
-                }
-              } catch (e) {
+              } on UserNotFoundException {
                 await showErrorDialog(
                   context,
-                  e.toString(),
+                  'Invalid user credentials',
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  'Authentication error',
                 );
               }
             },
