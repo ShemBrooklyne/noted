@@ -54,8 +54,9 @@ class _LoginViewState extends State<LoginView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration:
-                const InputDecoration(hintText: 'Enter your password here'),
+            decoration: const InputDecoration(
+              hintText: 'Enter your password here',
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -90,7 +91,9 @@ class _LoginViewState extends State<LoginView> {
                 );
               }
             },
-            child: const Text('Sign in'),
+            child: const Text(
+              'Sign in',
+            ),
           ),
           TextButton(
             onPressed: () {
