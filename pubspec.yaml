@@ -41,6 +41,8 @@ dependencies:
   firebase_analytics: ^10.7.4
   logger: ^2.0.2+1
   mockito: ^5.4.4
+  sqflite: ^2.3.0
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
