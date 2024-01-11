@@ -14,11 +14,16 @@ class NotesService {
   List<DatabaseNote> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
@@ -28,7 +33,8 @@ class NotesService {
       return user;
     } on CouldNotFindUserException {
       final createdUser = await createUser(email: email);
-      logger.i('On caught User Ex: $createdUser'); // this ex handling is buggy. [throws exception and doesn't exec handling block to create user]
+      logger.i(
+          'On caught User Ex: $createdUser'); // this ex handling is buggy. [throws exception and doesn't exec handling block to create user]
       return createdUser;
     } catch (e) {
       rethrow;
