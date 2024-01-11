@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:noted/services/crud/crud_exceptions.dart';
+import 'package:noted/views/notes/notes_view.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart'
     show MissingPlatformDirectoryException, getApplicationDocumentsDirectory;
@@ -27,6 +28,7 @@ class NotesService {
       return user;
     } on CouldNotFindUserException {
       final createdUser = await createUser(email: email);
+      logger.i('On caught User Ex: $createdUser'); // this ex handling is buggy. [throws exception and doesn't exec handling block to create user]
       return createdUser;
     } catch (e) {
       rethrow;
@@ -160,7 +162,10 @@ class NotesService {
     );
 
     if (results.isEmpty) {
-      throw CouldNotFindUserException();
+      //throw CouldNotFindUserException();
+      final createdUser = await createUser(email: email);
+      logger.i('What is the created user: $createdUser');
+      return createdUser;
     } else {
       return DatabaseUser.fromRow(results.first);
     }
